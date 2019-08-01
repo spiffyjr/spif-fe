@@ -10,9 +10,15 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
     constructor(private gameService: GameService, private router: Router) {}
 
-    async ngOnInit() {
-        if (!(await this.gameService.connected())) {
-            this.router.navigateByUrl('/login');
-        }
+    ngOnInit() {
+        const check = setInterval(async () => {
+            if (window.connected) {
+                clearInterval(check);
+
+                if (!(await this.gameService.connected())) {
+                    this.router.navigateByUrl('/login');
+                }
+            }
+        }, 100);
     }
 }
