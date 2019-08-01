@@ -15,8 +15,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$spif-fe-primary: mat-palette($mat-indigo);
-$spif-fe-accent: mat-palette($mat-pink, A200, A100, A400);
+$spif-fe-primary: mat-palette($mat-cyan);
+$spif-fe-accent: mat-palette($mat-orange, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $spif-fe-warn: mat-palette($mat-red);
@@ -43,14 +43,19 @@ $spif-fe-theme: mat-dark-theme($spif-fe-primary, $spif-fe-accent, $spif-fe-warn)
 
 html,
 body {
-    background: mat-color(mat-palette($mat-grey), 900);
-    color: mat-color(mat-palette($mat-grey), 300);
-    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    // font-family: Roboto, 'Helvetica Neue', sans-serif;
+    background: mat-color(mat-palette($mat-grey), 900);
+    color: mat-color(mat-palette($mat-grey), 300);
+    min-height: 100vh;
+    display: flex;
     font-family: 'Roboto Mono', monospace;
     font-size: 14px;
 }

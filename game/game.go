@@ -46,9 +46,7 @@ func New() (*Game, error) {
 }
 
 func (g *Game) ConnectLich(name string, port int) error {
-	if g.conn != nil {
-		g.conn.Close()
-	}
+	g.Disconnect()
 
 	text := fmt.Sprintf("Connecting via Lich to Character %s on port %d\n", name, port)
 	g.sendTag(parser.Tag{Name: "text", Text: text})
@@ -80,9 +78,7 @@ func (g *Game) ConnectLich(name string, port int) error {
 }
 
 func (g *Game) ConnectPlayNet(host string, port int, key string) error {
-	if g.conn != nil {
-		g.conn.Close()
-	}
+	g.Disconnect()
 
 	text := fmt.Sprintf("Connecting to %s:%d\n", host, port)
 	g.sendTag(parser.Tag{Name: "text", Text: text})
@@ -112,6 +108,18 @@ func (g *Game) Run() error {
 		return g.ConnectLich(name, port)
 	})
 
+	g.ui.Bind("connectPlayNet", func(name string, port int, key string) interface{} {
+		return g.ConnectPlayNet(name, port, key)
+	})
+
+	g.ui.Bind("connected", func() bool {
+		return g.conn != nil
+	})
+
+	g.ui.Bind("disconnect", func() {
+		g.Disconnect()
+	})
+
 	g.ui.Bind("send", func(cmd string) interface{} {
 		if g.conn == nil {
 			return ErrNotConnected
@@ -127,15 +135,17 @@ func (g *Game) Run() error {
 	return nil
 }
 
-func (g *Game) Close() {
+func (g *Game) Disconnect() {
 	if g.conn != nil {
 		g.conn.Close()
+		g.conn = nil
 	}
 	if g.lichCmd != nil {
 		if err := g.lichCmd.Process.Kill(); err != nil {
 			log.Println(err)
 		}
 		g.lichCmd.Wait()
+		g.lichCmd = nil
 	}
 }
 

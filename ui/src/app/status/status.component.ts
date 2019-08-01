@@ -8,7 +8,7 @@ import {
     ViewChild,
 } from '@angular/core';
 
-import { PlayService } from '../play.service';
+import { GameService } from '../game.service';
 
 @Component({
     selector: 'app-status',
@@ -38,7 +38,7 @@ export class StatusComponent implements AfterViewInit {
     text = 'n/a';
     percent = '0%';
 
-    constructor(private chRef: ChangeDetectorRef, private playService: PlayService) {
+    constructor(private chRef: ChangeDetectorRef, private gameService: GameService) {
         this.chRef.detach();
     }
 
@@ -49,7 +49,7 @@ export class StatusComponent implements AfterViewInit {
         (this.barEl.nativeElement as HTMLElement).style.backgroundColor = this.background;
         (this.fillEl.nativeElement as HTMLElement).style.backgroundColor = this.fill;
 
-        this.playService.ontag.subscribe(t => {
+        this.gameService.ontag.subscribe(t => {
             if (t.name !== 'progressBar' || t.attrs.id !== this.type) {
                 return;
             }

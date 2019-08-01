@@ -1,6 +1,13 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatIconModule } from '@angular/material';
+import {
+    MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+} from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'reflect-metadata';
@@ -14,9 +21,20 @@ import { PromptComponent } from './prompt/prompt.component';
 import { StatusComponent } from './status/status.component';
 import { WindowComponent } from './window/window.component';
 import { WoundsComponent } from './wounds/wounds.component';
+import { LoginComponent } from './login/login.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
-    declarations: [AppComponent, CompassComponent, PromptComponent, StatusComponent, WindowComponent, WoundsComponent],
+    declarations: [
+        AppComponent,
+        CompassComponent,
+        PromptComponent,
+        StatusComponent,
+        WindowComponent,
+        WoundsComponent,
+        LoginComponent,
+        GameComponent,
+    ],
     imports: [
         // @angular/angular
         BrowserModule,
@@ -25,7 +43,11 @@ import { WoundsComponent } from './wounds/wounds.component';
 
         // @angular/material
         MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
         MatIconModule,
+        MatInputModule,
+        MatTabsModule,
 
         AppRoutingModule,
     ],

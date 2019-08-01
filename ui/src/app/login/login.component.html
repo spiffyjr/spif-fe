@@ -1,0 +1,26 @@
+<header>
+    <h1>Login</h1>
+</header>
+
+<div>
+    <mat-card *ngIf="working">Connecting, please wait...</mat-card>
+
+    <mat-card>
+        <mat-tab-group>
+            <mat-tab label="Lich">
+                <form [formGroup]="lichForm" (submit)="loginLich()">
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Character" formControlName="character" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Port" formControlName="port" />
+                    </mat-form-field>
+                    <button mat-button color="primary" type="submit" [disabled]="lichForm.invalid || working">
+                        Connect
+                    </button>
+                </form>
+            </mat-tab>
+            <mat-tab label="Play.net"></mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</div>

@@ -8,7 +8,7 @@ import {
     ViewChild,
 } from '@angular/core';
 
-import { PlayService } from '../play.service';
+import { GameService } from '../game.service';
 
 @Component({
     selector: 'app-prompt',
@@ -34,7 +34,7 @@ export class PromptComponent implements AfterViewInit {
     private interval: NodeJS.Timer;
     private serverTimeOffset = 0;
 
-    constructor(public playService: PlayService, private chRef: ChangeDetectorRef) {
+    constructor(public gameService: GameService, private chRef: ChangeDetectorRef) {
         this.chRef.detach();
     }
 
@@ -43,7 +43,7 @@ export class PromptComponent implements AfterViewInit {
 
         this.prompt.nativeElement.focus();
 
-        this.playService.ontag.subscribe(t => {
+        this.gameService.ontag.subscribe(t => {
             if (t.name === 'prompt') {
                 if (this.promptText === t.text) {
                     return;
@@ -120,8 +120,8 @@ export class PromptComponent implements AfterViewInit {
             this.historyIndex = -1;
         }
 
-        this.playService.ontag.next({ name: 'text', text: `${this.promptText}${txt}` });
-        this.playService.send(txt);
+        this.gameService.ontag.next({ name: 'text', text: `${this.promptText}${txt}` });
+        this.gameService.send(txt);
     }
 
     private handleArrowUp() {

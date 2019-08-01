@@ -11,7 +11,7 @@ import {
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as Mark from 'mark.js';
 
-import { PlayService } from '../play.service';
+import { GameService } from '../game.service';
 import { SettingsService } from '../settings.service';
 
 interface Output {
@@ -57,7 +57,7 @@ export class WindowComponent implements AfterViewInit, OnInit {
     constructor(
         private chRef: ChangeDetectorRef,
         private ds: DomSanitizer,
-        private playService: PlayService,
+        private gameService: GameService,
         private settings: SettingsService,
     ) {
         this.chRef.detach();
@@ -66,7 +66,7 @@ export class WindowComponent implements AfterViewInit, OnInit {
     ngOnInit() {
         this.chRef.detectChanges();
 
-        this.playService.ontag.subscribe((tag: any) => {
+        this.gameService.ontag.subscribe((tag: any) => {
             if (tag.name === 'style') {
                 if (tag.attrs.id === '') {
                     this.currentStyle = null;

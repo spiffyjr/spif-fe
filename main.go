@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer g.Close()
+	defer g.Disconnect()
 
 	g.Run()
 }
