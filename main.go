@@ -14,6 +14,5 @@ func main() {
 	}
 	defer g.Close()
 
-	g.ConnectTCP("localhost", 8000)
 	g.Run()
 }
