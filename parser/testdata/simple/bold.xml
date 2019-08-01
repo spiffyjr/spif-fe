@@ -1,1 +1,2 @@
-<b><pushBold/>If you are sure you want to see BOLD then CONFIRM me.</popBold></b>
+If you are sure you want to see BOLD then <b><pushBold/>CONFIRM<popBold/></b> me.
+If you are sure you want to see BOLD then <pushBold/><b>CONFIRM</b><popBold/> me.

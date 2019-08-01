@@ -34,9 +34,13 @@ export class PromptComponent implements AfterViewInit {
     private interval: NodeJS.Timer;
     private serverTimeOffset = 0;
 
-    constructor(public playService: PlayService, private chRef: ChangeDetectorRef) {}
+    constructor(public playService: PlayService, private chRef: ChangeDetectorRef) {
+        this.chRef.detach();
+    }
 
     ngAfterViewInit() {
+        this.chRef.detectChanges();
+
         this.prompt.nativeElement.focus();
 
         this.playService.ontag.subscribe(t => {

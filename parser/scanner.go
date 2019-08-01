@@ -27,9 +27,8 @@ func splitCRLF(data []byte, atEOF bool) (advance int, token []byte, err error) {
 }
 
 func NewScanner(rd io.Reader) *bufio.Scanner {
-	buf := make([]byte, 128*1024)
 	scanner := bufio.NewScanner(rd)
-	scanner.Buffer(buf, len(buf))
+	scanner.Buffer(make([]byte, 128*1024), 128*1024)
 	scanner.Split(splitCRLF)
 
 	return scanner

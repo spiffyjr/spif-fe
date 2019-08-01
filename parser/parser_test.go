@@ -96,23 +96,42 @@ func (s *ParserSuite) TestLook() {
 
 	// tag one - room name (no children)
 	s.Equal("text", tags[0].Name)
+	s.Equal("roomName", tags[0].Attrs["class"])
 
-	if !s.Equal(tags[0].Children.Len(), 0) {
+	if !s.Len(tags[0].Children, 0) {
 		return
 	}
 
-	// tag two - roomDesc (many children)
+	// tag two - roomDesc
 	s.Equal("text", tags[1].Name)
+	s.Equal("roomDesc", tags[1].Attrs["class"])
 
-	if !s.Equal(tags[1].Children.Len(), 4) {
+	if !s.Len(tags[1].Children, 0) {
 		return
 	}
 
-	// tag three - obvious paths (exits as child)
+	// tag three - obvious paths
 	s.Equal("text", tags[2].Name)
 
-	if !s.Equal(tags[2].Children.Len(), 1) {
+	if !s.Len(tags[2].Children, 0) {
 		return
+	}
+}
+
+func (s *ParserSuite) TestBold() {
+	tags := fileTags("simple/bold")
+
+	if !s.Len(tags, 2) {
+		return
+	}
+
+	tag := tags[0]
+
+	for expected, actual := range map[string]interface{}{
+		"text": tag.Name,
+		"If you are sure you want to see BOLD then <b>CONFIRM</b> me.": tag.Text,
+	} {
+		s.Equal(expected, actual)
 	}
 }
 
@@ -125,7 +144,7 @@ func (s *ParserSuite) TestChild() {
 
 	s.Equal("compass", tags[0].Name)
 
-	if !s.Equal(tags[0].Children.Len(), 2) {
+	if !s.Len(tags[0].Children, 2) {
 		return
 	}
 
@@ -140,13 +159,33 @@ func (s *ParserSuite) TestInline() {
 	}
 
 	tag := tags[1]
-	if !s.Equal(tag.Children.Len(), 1) {
+	if !s.Len(tag.Children, 0) {
 		return
 	}
 
 	for expected, actual := range map[string]interface{}{
 		"text": tag.Name,
-		"Kips, your Combat Maneuver training is as follows:": tag.Text,
+		`<a exist="-11051085" noun="Kips">Kips</a>, your Combat Maneuver training is as follows:`: tag.Text,
+	} {
+		s.Equal(expected, actual)
+	}
+}
+
+func (s *ParserSuite) TestMultiInline() {
+	tags := fileTags("simple/multiinline")
+
+	if !s.Len(tags, 1) {
+		return
+	}
+
+	tag := tags[0]
+	if !s.Len(tag.Children, 0) {
+		return
+	}
+
+	for expected, actual := range map[string]interface{}{
+		"text": tag.Name,
+		`<a exist="-11051085" noun="Kips">Kips</a>, hi there buddy.  Would you like <a exist="1234" noun="Coffee">some coffee</a>?`: tag.Text,
 	} {
 		s.Equal(expected, actual)
 	}
@@ -174,12 +213,13 @@ func (s *ParserSuite) TestNPC() {
 	}
 
 	tag := tags[0]
-	if !s.Equal(tag.Children.Len(), 1) {
-		return
-	}
 
-	s.Equal("a", tag.Children.Peek().Name)
-	s.Equal("npc", tag.Children.Peek().Attrs["class"])
+	for expected, actual := range map[string]interface{}{
+		"text": tag.Name,
+		`You also see a <a exist="79410" noun="barker">gnome barker</a>.`: tag.Text,
+	} {
+		s.Equal(expected, actual)
+	}
 }
 
 func (s *ParserSuite) TestStyle() {

@@ -2,14 +2,14 @@ package parser
 
 import (
 	"encoding/xml"
+	"fmt"
 	"strings"
 )
 
 type Parser struct {
 	ontag TagHandler
-	tags  *Tags
+	tags  Tags
 
-	boldOpen  bool
 	styleOpen bool
 }
 
@@ -18,7 +18,7 @@ type TagHandler func(tag Tag)
 func New(ontag TagHandler) *Parser {
 	return &Parser{
 		ontag: ontag,
-		tags:  &Tags{},
+		tags:  Tags{},
 	}
 }
 
@@ -38,22 +38,14 @@ func (p *Parser) StartElement(name string, attrs TagAttributes) {
 			}
 		}
 		return
-	} else if name == "b" || name == "pushBold" {
-		if !p.boldOpen {
-			p.boldOpen = true
-		}
-		return
-	} else if name == "popBold" {
-		// skip, handled by EndElement
-		return
 	}
 
 	tag := Tag{Name: name, Attrs: attrs}
 
 	// starting a new element with text on the stack, pop it off
-	if !p.isInline(tag.Name) && p.tags.Len() > 0 && p.tags.Peek().Name == "text" {
-		p.send(p.tags.Pop())
-	}
+	// if !p.isInline(tag.Name) && len(p.tags) > 0 && p.tags.Peek().Name == "text" {
+	// 	p.send(p.tags.Pop())
+	// }
 
 	p.tags.Push(tag)
 }
@@ -62,29 +54,12 @@ func (p *Parser) EndElement(name string) {
 	if name == "style" {
 		// handled in StartElement
 		return
-	} else if name == "b" || name == "popBold" {
-		if p.boldOpen {
-			p.boldOpen = false
-		}
-
-		// <pushBold> with <a> gets the npc class added
-		lastTag := p.tags.Peek()
-		if lastTag != nil {
-			lastChild := lastTag.Children.Peek()
-			if lastChild != nil && lastChild.Name == "a" {
-				lastChild.Attrs["class"] = "npc"
-			}
-		}
-		return
-	} else if name == "pushBold" {
-		// skip, handled by StartElement
-		return
 	}
 
 	tag := p.tags.Pop()
 	if p.isInline(tag.Name) {
 		// stack is empty add a plain text node for parent
-		if p.tags.Len() == 0 {
+		if len(p.tags) == 0 {
 			p.tags.Push(Tag{Name: "text"})
 		}
 
@@ -93,7 +68,7 @@ func (p *Parser) EndElement(name string) {
 		return
 	}
 
-	if p.tags.Len() == 0 {
+	if len(p.tags) == 0 {
 		p.send(tag)
 		return
 	}
@@ -102,7 +77,7 @@ func (p *Parser) EndElement(name string) {
 }
 
 func (p *Parser) Text(text string) {
-	if p.tags.Len() == 0 {
+	if len(p.tags) == 0 {
 		p.tags.Push(Tag{Name: "text"})
 	}
 
@@ -111,10 +86,6 @@ func (p *Parser) Text(text string) {
 	// check for ending text tag
 	if strings.HasSuffix(text, "\n") {
 		tag := p.tags.Pop()
-		// skip end of element \r\n text
-		// if strings.TrimSpace(tag.Text) == "" {
-		// return
-		// }
 		p.send(tag)
 	}
 }
@@ -150,7 +121,7 @@ func (p *Parser) Parse(line string) {
 		}
 	}
 
-	if p.tags.Len() > 0 && p.tags.Peek().Text != "" {
+	if len(p.tags) > 0 && p.tags.Peek().Text != "" {
 		p.send(p.tags.Pop())
 	}
 }
@@ -169,6 +140,32 @@ func (p *Parser) isInline(name string) bool {
 	return false
 }
 
+func (p *Parser) expandInlineChild(tag TagChild) string {
+	var attrs string
+
+	for k, v := range tag.Attrs {
+		attrs += fmt.Sprintf(` %s="%s"`, k, v)
+	}
+
+	return fmt.Sprintf("<%s%s>%s</%s>", tag.Name, attrs, tag.Text, tag.Name)
+}
+
 func (p *Parser) send(tag Tag) {
+	var children TagChildren
+
+	// TODO: add toggle to disable link inlining
+	// inline children so the slower UI doesn't have to do it
+	var offset int
+	for _, child := range tag.Children {
+		if !p.isInline(child.Name) {
+			children = append(children, child)
+			continue
+		}
+		newText := tag.Text[:child.Start+offset] + p.expandInlineChild(child) + tag.Text[child.End+offset:]
+		offset += len(newText) - len(tag.Text)
+		tag.Text = newText
+	}
+
+	tag.Children = children
 	p.ontag(tag)
 }

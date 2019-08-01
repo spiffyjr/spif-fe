@@ -67,7 +67,6 @@ func (g *Game) Run() error {
 	}
 
 	ui.Bind("connect", func(host string, port int) interface{} {
-		fmt.Printf("connecting to %s:%d\n", host, port)
 		return g.ConnectTCP(host, port)
 	})
 
@@ -107,13 +106,7 @@ func (g *Game) Run() error {
 
 	go func() {
 		for scanner.Scan() {
-			line := scanner.Text()
-			p.Parse(line)
-
-			// line = strings.Replace(line, "\r", "\\r", -1)
-			// line = strings.Replace(line, "\n", "\\n", -1)
-
-			// log.Println(line)
+			p.Parse(scanner.Text())
 		}
 
 		if err := scanner.Err(); err != nil {

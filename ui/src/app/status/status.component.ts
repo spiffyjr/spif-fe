@@ -38,9 +38,13 @@ export class StatusComponent implements AfterViewInit {
     text = 'n/a';
     percent = '0%';
 
-    constructor(private chRef: ChangeDetectorRef, private playService: PlayService) {}
+    constructor(private chRef: ChangeDetectorRef, private playService: PlayService) {
+        this.chRef.detach();
+    }
 
     ngAfterViewInit() {
+        this.chRef.detectChanges();
+
         (this.barEl.nativeElement as HTMLElement).style.color = this.color;
         (this.barEl.nativeElement as HTMLElement).style.backgroundColor = this.background;
         (this.fillEl.nativeElement as HTMLElement).style.backgroundColor = this.fill;

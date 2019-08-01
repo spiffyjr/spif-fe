@@ -29,6 +29,20 @@ $spif-fe-theme: mat-dark-theme($spif-fe-primary, $spif-fe-accent, $spif-fe-warn)
 // that you are using.
 @include angular-material-theme($spif-fe-theme);
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 2px mat-color(mat-palette($mat-grey), 100);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 2px mat-color(mat-palette($mat-grey), 200);
+    border-radius: 2px;
+}
+
 html,
 body {
     background: mat-color(mat-palette($mat-grey), 900);
