@@ -71,14 +71,14 @@ b {
     font-weight: bolder;
 }
 
-// d {
-//     color: mat-color(mat-palette($mat-blue), 'darker');
-//     cursor: pointer;
-//     text-decoration: underline;
-// }
+a {
+    // color: mat-color(mat-palette($mat-blue), 'darker');
+    // cursor: pointer;
+    text-decoration: underline;
 
-npc {
-    color: mat-color(mat-palette($mat-yellow), 300);
+    &.npc {
+        color: mat-color(mat-palette($mat-yellow), 300);
+    }
 }
 
 preset {

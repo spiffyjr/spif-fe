@@ -216,7 +216,7 @@ func (s *ParserSuite) TestNPC() {
 
 	for expected, actual := range map[string]interface{}{
 		"text": tag.Name,
-		`You also see a <a exist="79410" noun="barker">gnome barker</a>.`: tag.Text,
+		`You also see a <a exist="79410" noun="barker" class="npc">gnome barker</a>.`: tag.Text,
 	} {
 		s.Equal(expected, actual)
 	}

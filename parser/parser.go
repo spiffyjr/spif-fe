@@ -153,6 +153,19 @@ func (p *Parser) expandInlineChild(tag TagChild) string {
 func (p *Parser) send(tag Tag) {
 	var children TagChildren
 
+	// replace npc links
+	for i := range tag.Children {
+		if i == 0 {
+			continue
+		}
+
+		child := &tag.Children[i]
+		lastChild := tag.Children[i-1]
+		if child.Name == "a" && (lastChild.Name == "pushBold" || lastChild.Name == "b") {
+			child.Attrs["class"] = "npc"
+		}
+	}
+
 	// TODO: add toggle to disable link inlining
 	// inline children so the slower UI doesn't have to do it
 	var offset int
@@ -161,6 +174,7 @@ func (p *Parser) send(tag Tag) {
 			children = append(children, child)
 			continue
 		}
+
 		newText := tag.Text[:child.Start+offset] + p.expandInlineChild(child) + tag.Text[child.End+offset:]
 		offset += len(newText) - len(tag.Text)
 		tag.Text = newText
