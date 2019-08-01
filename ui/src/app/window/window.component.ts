@@ -64,6 +64,8 @@ export class WindowComponent implements AfterViewInit, OnInit {
     }
 
     ngOnInit() {
+        this.chRef.detectChanges();
+
         this.playService.ontag.subscribe((tag: any) => {
             if (tag.name === 'style') {
                 if (tag.attrs.id === '') {
