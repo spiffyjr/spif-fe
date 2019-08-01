@@ -1,0 +1,5 @@
+ui/dist/
+release/
+game/assets.go
+node_modules
+tmp

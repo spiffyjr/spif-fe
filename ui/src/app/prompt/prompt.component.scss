@@ -1,0 +1,63 @@
+@import '~@angular/material/theming';
+
+:host {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: 1px;
+
+    .timer {
+        flex: 1;
+        position: relative;
+        height: 100%;
+
+        .roundtime {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.2;
+            height: 100%;
+            width: 100%;
+            pointer-events: none;
+            z-index: 2;
+            display: flex;
+            flex-flow: row nowrap;
+            grid-gap: 5px;
+
+            div {
+                margin-right: 2px;
+                height: 100%;
+                width: 20px;
+
+                &.castTime {
+                    background-color: mat-color(mat-palette($mat-blue));
+                }
+
+                &.roundTime {
+                    background-color: mat-color(mat-palette($mat-red));
+                }
+            }
+        }
+
+        input {
+            background-color: #101010;
+            border: 0;
+            box-sizing: border-box;
+            color: #e5e5e5;
+            height: 100%;
+            width: 100%;
+            line-height: 16px;
+            outline: none;
+            position: absolute;
+            padding: 5px;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    .prompt {
+        flex: 2rem 0 0;
+        margin-right: 5px;
+        text-align: right;
+    }
+}

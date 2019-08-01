@@ -1,0 +1,7 @@
+<div class="container" #container>
+    <div *ngFor="let o of output; trackBy: trackById" [class]="o.style" [innerHTML]="o.html"></div>
+</div>
+
+<button mat-icon-button [disabled]="scrollLocked">
+    <mat-icon (click)="scrollToBottom()">keyboard_arrow_down</mat-icon>
+</button>

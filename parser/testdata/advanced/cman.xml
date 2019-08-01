@@ -1,0 +1,19 @@
+<a exist="-11051085" noun="Kips">Kips</a>, your Combat Maneuver training is as follows:
+
+<output class="mono"/>
+Skill name             Mnemonic        Ranks
+Combat Focus           <d cmd='CMAN HELP focus'>focus</d>             5
+Stun Maneuvers         <d cmd='CMAN HELP stunman'>stunman</d>           2
+Subdual Strike         <d cmd='CMAN HELP sstrike'>sstrike</d>           2
+Specialization I       <d cmd='CMAN HELP wspec1'>wspec1</d>            5
+Combat Mobility        <d cmd='CMAN HELP mobility'>mobility</d>          1
+Parry Mastery          <d cmd='CMAN HELP pmastery'>pmastery</d>          3
+Block Mastery          <d cmd='CMAN HELP bmastery'>bmastery</d>          3
+Cunning Defense        <d cmd='CMAN HELP cdefense'>cdefense</d>          5
+Griffin's Voice        <d cmd='CMAN HELP griffin'>griffin</d>           3
+<output class=""/>
+
+Available Combat Maneuver Training Points: 40
+Total Points converted during your current 30-day unlearning cycle: 1
+Number of days remaining in your current 30-day unlearning cycle: 18 days
+<prompt time="1564366114">&gt;</prompt>

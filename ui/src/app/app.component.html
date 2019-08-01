@@ -1,0 +1,22 @@
+<div class="sidebar">
+    <div></div>
+    <app-wounds></app-wounds>
+    <app-compass></app-compass>
+    <app-status type="mindState" color="white" background="#212121" fill="#002171"></app-status>
+    <app-status type="pbarStance" color="white" background="#212121" fill="#002171"></app-status>
+    <app-status type="encumlevel" color="white" background="#212121" fill="#002171"></app-status>
+</div>
+<div class="body">
+    <app-window stream="thoughts" [bufferSize]="500"></app-window>
+    <!-- <app-window></app-window> -->
+    <app-window></app-window>
+    <div class="status">
+        <app-status type="health" color="white" background="#212121" fill="#7f0000"></app-status>
+        <app-status type="mana" color="white" background="#212121" fill="#002171"></app-status>
+        <app-status type="stamina" color="black" background="#f57f17" fill="#bc5100"></app-status>
+        <app-status type="spirit" color="white" background="#1b0000" fill="#3e2723"></app-status>
+    </div>
+    <app-prompt></app-prompt>
+</div>
+
+<!-- <router-outlet></router-outlet> -->

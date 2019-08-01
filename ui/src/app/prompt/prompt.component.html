@@ -1,0 +1,7 @@
+<div class="prompt">{{ promptText }}</div>
+<div class="timer">
+    <div #roundtime class="roundtime">
+        <div *ngFor="let p of [].constructor(this.roundtimeCount)" [class]="roundtimeType"></div>
+    </div>
+    <input #prompt type="text" placeholder="" />
+</div>

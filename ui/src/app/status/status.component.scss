@@ -1,0 +1,26 @@
+:host {
+    display: block;
+
+    div {
+        box-sizing: border-box;
+        border: 1px solid #010101;
+        height: 1.5em;
+        width: 100%;
+        position: relative;
+
+        &:before {
+            content: attr(data-label);
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        span {
+            display: inline-block;
+            height: 100%;
+        }
+    }
+}

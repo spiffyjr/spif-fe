@@ -1,0 +1,36 @@
+:host {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+
+    span {
+        color: #444444;
+
+        &.wound1 {
+            color: #ffff00;
+        }
+
+        &.wound2 {
+            color: #ff6600;
+        }
+
+        &.wound3 {
+            color: #ff0000;
+        }
+
+        &.scar1 {
+            color: #00ffff;
+        }
+
+        &.scar2 {
+            color: #0066ff;
+        }
+
+        &.scar3 {
+            color: #0000ff;
+        }
+    }
+}
