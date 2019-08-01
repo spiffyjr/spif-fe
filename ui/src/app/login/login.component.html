@@ -3,10 +3,37 @@
 </header>
 
 <div>
+    <mat-card *ngIf="error">{{ error }}</mat-card>
     <mat-card *ngIf="working">Connecting, please wait...</mat-card>
 
     <mat-card>
         <mat-tab-group>
+            <mat-tab label="Play.net">
+                <form *ngIf="!playInstances" [formGroup]="playForm" (submit)="playNetConnect()">
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Username" formControlName="username" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="password" placeholder="Password" formControlName="password" />
+                    </mat-form-field>
+                    <button mat-button color="primary" type="submit" [disabled]="playForm.invalid || working">
+                        Connect
+                    </button>
+                </form>
+
+                <ng-container *ngIf="playInstances && !playCharacters">
+                    <div *ngFor="let i of playInstances">
+                        <button mat-button color="primary" (click)="playNetCharacters(i.code)">{{ i.name }}</button>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="playCharacters">
+                    <div *ngFor="let c of playCharacters">
+                        <button mat-button color="primary" (click)="loginPlayNet(c.id)">{{ c.name }}</button>
+                    </div>
+                </ng-container>
+            </mat-tab>
+
             <mat-tab label="Lich">
                 <form [formGroup]="lichForm" (submit)="loginLich()">
                     <mat-form-field>
@@ -20,7 +47,6 @@
                     </button>
                 </form>
             </mat-tab>
-            <mat-tab label="Play.net"></mat-tab>
         </mat-tab-group>
     </mat-card>
 </div>

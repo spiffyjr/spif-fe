@@ -21,6 +21,7 @@ type Game struct {
 	conn    net.Conn
 	lichCmd *exec.Cmd
 	parser  *parser.Parser
+	playnet *PlayNet
 	ui      lorca.UI
 }
 
@@ -42,10 +43,13 @@ func New() (*Game, error) {
 		ui.Load(fmt.Sprintf("http://%s", ln.Addr()))
 	}
 
-	return &Game{ui: ui}, nil
+	return &Game{
+		playnet: NewPlayNet(),
+		ui:      ui,
+	}, nil
 }
 
-func (g *Game) ConnectLich(name string, port int) error {
+func (g *Game) LoginLich(name string, port int) error {
 	g.Disconnect()
 
 	text := fmt.Sprintf("Connecting via Lich to Character %s on port %d\n", name, port)
@@ -77,7 +81,7 @@ func (g *Game) ConnectLich(name string, port int) error {
 	return nil
 }
 
-func (g *Game) ConnectPlayNet(host string, port int, key string) error {
+func (g *Game) LoginPlayNet(host string, port int, key string) error {
 	g.Disconnect()
 
 	text := fmt.Sprintf("Connecting to %s:%d\n", host, port)
@@ -104,12 +108,28 @@ func (g *Game) ConnectPlayNet(host string, port int, key string) error {
 func (g *Game) Run() error {
 	g.parser = parser.New(g.sendTag)
 
-	g.ui.Bind("connectLich", func(name string, port int) interface{} {
-		return g.ConnectLich(name, port)
+	g.ui.Bind("loginLich", func(name string, port int) error {
+		return g.LoginLich(name, port)
 	})
 
-	g.ui.Bind("connectPlayNet", func(name string, port int, key string) interface{} {
-		return g.ConnectPlayNet(name, port, key)
+	g.ui.Bind("loginPlayNet", func(name string, port int, key string) error {
+		return g.LoginPlayNet(name, port, key)
+	})
+
+	g.ui.Bind("playNetCharacters", func(code string) ([]PlayNetCharacter, error) {
+		return g.playnet.GetCharacters(code)
+	})
+
+	g.ui.Bind("playNetConnect", func(username string, password string) error {
+		return g.playnet.Connect(username, []byte(password))
+	})
+
+	g.ui.Bind("playNetInstances", func() ([]PlayNetInstance, error) {
+		return g.playnet.GetInstances()
+	})
+
+	g.ui.Bind("playNetLoginData", func(code string, characterID string) (*PlayNetLogin, error) {
+		return g.playnet.GetLoginData(code, characterID)
 	})
 
 	g.ui.Bind("connected", func() bool {
@@ -120,7 +140,7 @@ func (g *Game) Run() error {
 		g.Disconnect()
 	})
 
-	g.ui.Bind("send", func(cmd string) interface{} {
+	g.ui.Bind("send", func(cmd string) error {
 		if g.conn == nil {
 			return ErrNotConnected
 		}

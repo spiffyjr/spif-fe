@@ -5,6 +5,10 @@
     div {
         display: grid;
 
+        ::ng-deep.mat-tab-body-wrapper {
+            margin-top: 15px;
+        }
+
         mat-card {
             align-self: center;
             justify-self: center;
@@ -13,7 +17,6 @@
             form {
                 display: flex;
                 flex-flow: column nowrap;
-                margin-top: 15px;
             }
         }
     }
