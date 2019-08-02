@@ -18,8 +18,6 @@ export class GameComponent implements OnInit {
     constructor(private gameService: GameService, private settings: SettingsService) {}
 
     ngOnInit() {
-        this.applyHighlights();
-
         for (const macro of this.settings.macros) {
             const keyParts = macro.key.split('+');
 
@@ -81,21 +79,5 @@ export class GameComponent implements OnInit {
                 }
             }
         }
-    }
-
-    private applyHighlights() {
-        const head = document.head;
-        const style = document.createElement('style');
-        style.setAttribute('type', 'text/css');
-
-        head.appendChild(style);
-
-        let css = '';
-
-        for (let i = 0; i < this.settings.highlights.length; i++) {
-            css += `.hl-${i}{ color: ${this.settings.highlights[i].color} }\n`;
-        }
-
-        style.appendChild(document.createTextNode(css));
     }
 }

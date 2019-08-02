@@ -132,6 +132,10 @@ func (g *Game) Run() error {
 		return g.playnet.GetLoginData(code, characterID)
 	})
 
+	g.ui.Bind("settingsLoad", func() (*Settings, error) {
+		return g.settingsLoad()
+	})
+
 	g.ui.Bind("connected", func() bool {
 		return g.conn != nil
 	})
@@ -167,6 +171,18 @@ func (g *Game) Disconnect() {
 		g.lichCmd.Wait()
 		g.lichCmd = nil
 	}
+}
+
+func (g *Game) settingsLoad() (*Settings, error) {
+	f, err := os.Open("./spif-fe.json")
+	if err != nil {
+		return nil, err
+	}
+	var settings Settings
+	if err := json.NewDecoder(f).Decode(&settings); err != nil {
+		return nil, err
+	}
+	return &settings, nil
 }
 
 func (g *Game) connect() {

@@ -1,78 +1,53 @@
 import { Injectable } from '@angular/core';
 
+interface Settings {
+    highlights: SettingsHighlight[];
+    macros: SettingsMacro[];
+}
+
+interface SettingsHighlight {
+    pattern: string;
+    color: string;
+}
+
+interface SettingsMacro {
+    key: string;
+    cmd: string;
+}
+
+declare global {
+    interface Window {
+        settingsLoad(): Promise<Settings>;
+    }
+}
+
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-    highlights = [
-        {
-            pattern: /^(?:You gesture|You intone a phrase of elemental power|You recite a series of mystical phrases|You trace a series of glowing runes|Your hands glow with power as you invoke|You trace a simple rune while intoning|You trace a sign while petitioning the spirits|You trace an intricate sign that contorts in the air).*$/,
-            color: '#9090ff',
-        },
-        {
-            pattern: /^(?:Cast Roundtime 3 Seconds\.|Your spell is ready\.)$/,
-            color: '#9090ff',
-        },
-        {
-            pattern: /^.*remaining\. \]$/,
-            color: '#9090ff',
-        },
-        {
-            pattern: /([A-Z][a-z]+ disk)/,
-            color: '#88aaff',
-        },
-        {
-            pattern: /\([0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]\)$/,
-            color: '#555555',
-        },
-        {
-            pattern: /^\[LNet\]/,
-            color: '#0099ff',
-        },
-        {
-            pattern: /^\[code\]/,
-            color: '#008000',
-        },
-        {
-            pattern: /^\[Prime\]/,
-            color: '#808000',
-        },
-        {
-            pattern: /^\[Private(?:To)?\]/,
-            color: 'yellow',
-        },
-        {
-            pattern: /^--- Lich:.*/,
-            color: '#008000',
-        },
-        {
-            pattern: /\((?:calmed|dead|flying|hiding|kneeling|prone|sitting|sleeping|stunned)\)/,
-            color: '#565656',
-        },
-        {
-            pattern: /^.* throws (?:his|her) arms skyward!$|swirling black void|(?:Dozens of flaming meteors light the sky nearby!|Several flaming meteors light the nearby sky!|Several flaming rocks burst from the sky and smite the area!|A low roar of quickly parting air can be heard above!)/,
-            color: '#ff0000',
-        },
-        {
-            pattern: /^.* is stunned!$|^You come out of hiding\.$/,
-            color: '#ffffff',
-        },
-        {
-            pattern: /.*ruining your hiding place\.$|^You are no longer hidden\.$|^\s*You are (?:stunned|knocked to the ground).*|^You are unable to remain hidden!$|^You are visible again\.$|^You fade into sight\.$|^You fade into view.*|^You feel drained!$|^You have overextended yourself!$|^You feel yourself going into shock!$/,
-            color: '#ffaaaa',
-        },
-        {
-            pattern: /Strike leaves foe vulnerable.*attack!/,
-            color: 'green',
-        },
-    ];
+    highlights: SettingsHighlight[] = [];
+    macros: SettingsMacro[] = [];
 
-    macros = [
-        {
-            key: 'ctrl+o',
-            cmd: '\\xstance offensive\\r',
-        },
-        {
-            key: 'ctrl+d',
-            cmd: '\\xstance defensive\\r',
-        },
-    ];
+    async load(): Promise<void> {
+        return window.settingsLoad().then(settings => {
+            this.highlights = settings.highlights;
+            this.macros = settings.macros;
+            this.applyHighlights();
+        });
+    }
+
+    private applyHighlights() {
+        // apply highlight styling to body
+        const head = document.head;
+        const style = document.createElement('style');
+        style.setAttribute('type', 'text/css');
+
+        head.appendChild(style);
+
+        let css = '';
+
+        for (let i = 0; i < this.highlights.length; i++) {
+            css += `.hl-${i}{ color: ${this.highlights[i].color} }\n`;
+        }
+
+        style.appendChild(document.createTextNode(css));
+    }
 }

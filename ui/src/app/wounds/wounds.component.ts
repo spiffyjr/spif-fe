@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { GameService } from '../game.service';
 
@@ -9,7 +9,9 @@ import { GameService } from '../game.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WoundsComponent implements OnInit {
-    constructor(private gameService: GameService) {}
+    constructor(private chRef: ChangeDetectorRef, private gameService: GameService) {
+        this.chRef.detach();
+    }
 
     ngOnInit() {
         this.gameService.ontag.subscribe(t => {
@@ -23,6 +25,7 @@ export class WoundsComponent implements OnInit {
             }
 
             el.className = t.attrs.name.toLowerCase();
+            this.chRef.detectChanges();
         });
     }
 }

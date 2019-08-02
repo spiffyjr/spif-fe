@@ -50,7 +50,13 @@ export class StatusComponent implements AfterViewInit {
         (this.fillEl.nativeElement as HTMLElement).style.backgroundColor = this.fill;
 
         this.gameService.ontag.subscribe(t => {
-            if (t.name !== 'progressBar' || t.attrs.id !== this.type) {
+            if (t.name !== 'progressBar') {
+                return;
+            }
+
+            console.log(t);
+
+            if (t.attrs.id !== this.type) {
                 return;
             }
 
