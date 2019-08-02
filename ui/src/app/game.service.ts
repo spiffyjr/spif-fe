@@ -64,6 +64,27 @@ export class GameService {
         return window.playNetLoginData(gameCode, characterId);
     }
 
+    async sendCommand(cmd: string): Promise<void> {
+        let backslash = false;
+        for (const ch of cmd) {
+            if (backslash) {
+                if (ch === '\\') {
+                } else if (ch === 'x') {
+                    this.ontag.next({ name: 'clearPrompt' });
+                } else if (ch === 'r') {
+                    this.ontag.next({ name: 'sendPrompt' });
+                }
+                backslash = false;
+            } else {
+                if (ch === '\\') {
+                    backslash = true;
+                } else {
+                    this.ontag.next({ name: 'addPrompt', text: ch });
+                }
+            }
+        }
+    }
+
     async send(cmd: string): Promise<void> {
         if (cmd[0] === '.') {
             cmd = cmd.substring(1);
@@ -72,9 +93,6 @@ export class GameService {
                 case 'disconnect':
                 case 'quit':
                     await this.disconnect();
-                    this.message('*');
-                    this.message('* Disconnected');
-                    this.message('*');
                     this.router.navigateByUrl('/login');
                     return;
             }

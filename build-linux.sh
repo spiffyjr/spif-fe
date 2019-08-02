@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP=lorca-example
+APP=Spif-FE
 APPDIR=${APP}_1.0.0
 
 mkdir -p $APPDIR/usr/bin
@@ -22,7 +22,7 @@ Name=$APP
 Exec=$APP
 Icon=$APP
 Terminal=false
-StartupWMClass=Lorca
+StartupWMClass=Spif-FE
 EOF
 
 cat > $APPDIR/DEBIAN/control << EOF
@@ -31,8 +31,8 @@ Version: 1.0-0
 Section: base
 Priority: optional
 Architecture: amd64
-Maintainer: Serge Zaitsev <zaitsev.serge@gmail.com>
-Description: Example for Lorca GUI toolkit
+Maintainer: Kyle Spraggs <kyle.spraggs@gmail.com>
+Description: Spif-FE for Simutronics games
 EOF
 
 dpkg-deb --build $APPDIR

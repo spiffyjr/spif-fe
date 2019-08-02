@@ -17,7 +17,9 @@ export class GameComponent implements OnInit {
 
     constructor(private gameService: GameService, private settings: SettingsService) {}
 
-    ngOnInit() {
+    async ngOnInit() {
+        await this.settings.load();
+
         for (const macro of this.settings.macros) {
             const keyParts = macro.key.split('+');
 
@@ -60,24 +62,6 @@ export class GameComponent implements OnInit {
         }
 
         event.preventDefault();
-
-        let backslash = false;
-        for (const ch of key.cmd) {
-            if (backslash) {
-                if (ch === '\\') {
-                } else if (ch === 'x') {
-                    this.gameService.ontag.next({ name: 'clearPrompt' });
-                } else if (ch === 'r') {
-                    this.gameService.ontag.next({ name: 'sendPrompt' });
-                }
-                backslash = false;
-            } else {
-                if (ch === '\\') {
-                    backslash = true;
-                } else {
-                    this.gameService.ontag.next({ name: 'addPrompt', text: ch });
-                }
-            }
-        }
+        this.gameService.sendCommand(key.cmd);
     }
 }

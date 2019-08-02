@@ -25,7 +25,7 @@ func (t *Tag) AddChild(child Tag) {
 type TagChild struct {
 	Name  string        `json:"name"`
 	Text  string        `json:"text"`
-	Attrs TagAttributes `json:"attributes"`
+	Attrs TagAttributes `json:"attrs"`
 	Start int           `json:"start"`
 	End   int           `json:"end"`
 }

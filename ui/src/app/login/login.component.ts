@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
 
     async ngOnInit() {
         if (await this.gameService.connected()) {
-            this.router.navigateByUrl('/');
+            this.router.navigateByUrl('/game');
         }
     }
 

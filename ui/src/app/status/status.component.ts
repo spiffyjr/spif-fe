@@ -27,6 +27,9 @@ export class StatusComponent implements AfterViewInit {
     type: string;
 
     @Input()
+    name: string;
+
+    @Input()
     color: string;
 
     @Input()
@@ -50,24 +53,26 @@ export class StatusComponent implements AfterViewInit {
         (this.fillEl.nativeElement as HTMLElement).style.backgroundColor = this.fill;
 
         this.gameService.ontag.subscribe(t => {
-            if (t.name !== 'progressBar') {
+            if (t.name !== 'dialogData') {
+                return;
+            } else if (t.attrs['id'] !== this.type) {
                 return;
             }
 
-            console.log(t);
+            const child = t.children.find(c => c.name === 'progressBar' && c.attrs && c.attrs.id === this.name);
 
-            if (t.attrs.id !== this.type) {
+            if (!child) {
                 return;
             }
 
-            if (t.attrs.text) {
-                this.text = t.attrs.text;
+            if (child.attrs.text) {
+                this.text = child.attrs.text;
             }
 
-            if (['pbarStance', 'mindState', 'encumlevel'].includes(this.type)) {
-                this.percent = `${t.attrs.value}%`;
+            if (['pbarStance', 'mindState', 'encumlevel'].includes(this.name)) {
+                this.percent = `${child.attrs.value}%`;
             } else {
-                const match = t.attrs.text.match(/(\d+)\/(\d+)/);
+                const match = child.attrs.text.match(/(\d+)\/(\d+)/);
                 if (match) {
                     this.percent = `${Math.floor((+match[1] / +match[2]) * 100)}%`;
                 }

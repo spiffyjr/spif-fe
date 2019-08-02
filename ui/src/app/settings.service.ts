@@ -6,7 +6,7 @@ interface Settings {
 }
 
 interface SettingsHighlight {
-    pattern: string;
+    pattern: string | RegExp;
     color: string;
 }
 
@@ -29,15 +29,27 @@ export class SettingsService {
     async load(): Promise<void> {
         return window.settingsLoad().then(settings => {
             this.highlights = settings.highlights;
+
+            for (const highlight of settings.highlights) {
+                highlight.pattern = new RegExp(highlight.pattern);
+            }
+
             this.macros = settings.macros;
             this.applyHighlights();
         });
     }
 
     private applyHighlights() {
+        // clean up old styles if they exist
+        const ele = document.getElementById('hl-styles');
+        if (ele) {
+            document.head.removeChild(ele);
+        }
+
         // apply highlight styling to body
         const head = document.head;
         const style = document.createElement('style');
+        style.setAttribute('id', 'hl-styles');
         style.setAttribute('type', 'text/css');
 
         head.appendChild(style);
