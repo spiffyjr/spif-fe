@@ -1,4 +1,4 @@
-package game
+package playnet
 
 import (
 	"bufio"
@@ -9,33 +9,17 @@ import (
 	"time"
 )
 
-type PlayNet struct {
+type Client struct {
 	conn      net.Conn
 	rd        *bufio.Reader
-	instances []PlayNetInstance
+	instances []Instance
 }
 
-type PlayNetInstance struct {
-	Code string `json:"code"`
-	Name string `json:"name"`
+func NewClient() *Client {
+	return &Client{}
 }
 
-type PlayNetCharacter struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type PlayNetLogin struct {
-	Host string `json:"host"`
-	Port int    `json:"port"`
-	Key  string `json:"key"`
-}
-
-func NewPlayNet() *PlayNet {
-	return &PlayNet{}
-}
-
-func (p *PlayNet) GetLoginData(code string, characterID string) (*PlayNetLogin, error) {
+func (p *Client) GetLoginData(code string, characterID string) (*LoginData, error) {
 	if p.conn == nil {
 		return nil, ErrNotConnected
 	}
@@ -76,14 +60,14 @@ func (p *PlayNet) GetLoginData(code string, characterID string) (*PlayNetLogin, 
 	re := regexp.MustCompile(`GAMEHOST=([^\s]+)\s+GAMEPORT=([^\s]+)\s+KEY=([^\s]+)`)
 	matches := re.FindStringSubmatch(line)
 
-	return &PlayNetLogin{
+	return &LoginData{
 		Host: matches[1],
 		Port: 10024,
 		Key:  matches[3],
 	}, nil
 }
 
-func (p *PlayNet) GetCharacters(code string) ([]PlayNetCharacter, error) {
+func (p *Client) GetCharacters(code string) ([]Character, error) {
 	if p.conn == nil {
 		return nil, ErrNotConnected
 	}
@@ -127,18 +111,18 @@ func (p *PlayNet) GetCharacters(code string) ([]PlayNetCharacter, error) {
 		return nil, err
 	}
 
-	var characters []PlayNetCharacter
+	var characters []Character
 
 	parts = strings.Split(line, "\t")
 	for i := 5; i < len(parts); {
-		characters = append(characters, PlayNetCharacter{ID: parts[i], Name: parts[i+1]})
+		characters = append(characters, Character{ID: parts[i], Name: parts[i+1]})
 		i += 2
 	}
 
 	return characters, nil
 }
 
-func (p *PlayNet) GetInstances() ([]PlayNetInstance, error) {
+func (p *Client) GetInstances() ([]Instance, error) {
 	if p.conn == nil {
 		return nil, ErrNotConnected
 	} else if len(p.instances) > 0 {
@@ -179,13 +163,13 @@ func (p *PlayNet) GetInstances() ([]PlayNetInstance, error) {
 			continue
 		}
 
-		p.instances = append(p.instances, PlayNetInstance{Code: code, Name: name})
+		p.instances = append(p.instances, Instance{Code: code, Name: name})
 	}
 
 	return p.instances, nil
 }
 
-func (p *PlayNet) Connect(username string, password []byte) error {
+func (p *Client) Connect(username string, password []byte) error {
 	conn, err := net.Dial("tcp", "eaccess.play.net:7900")
 	if err != nil {
 		return err
@@ -240,8 +224,8 @@ func (p *PlayNet) Connect(username string, password []byte) error {
 	return nil
 }
 
-func (p *PlayNet) Disconnect() {
-	p.instances = []PlayNetInstance{}
+func (p *Client) Disconnect() {
+	p.instances = []Instance{}
 
 	if p.conn != nil {
 		p.conn.Close()

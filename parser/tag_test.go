@@ -55,3 +55,32 @@ func (s *TagSuite) TestPop() {
 	s.Equal(t2, t.Pop())
 	s.Len(t, 1)
 }
+
+func (s *TagSuite) TestPushingChildren() {
+	var t Tags
+
+	if !s.Nil(t.Peek()) {
+		return
+	}
+
+	t1 := Tag{Name: "Tag1"}
+	t.Push(t1)
+
+	s.Equal(&t1, t.Peek())
+
+	t.Peek().AddChild(Tag{
+		Name: "child1",
+		Text: "foobar",
+	})
+	if !s.Len(t.Peek().Children, 1) {
+		return
+	}
+
+	t.Peek().AddChild(Tag{
+		Name: "child2",
+		Text: "foobar",
+	})
+	if !s.Len(t.Peek().Children, 2) {
+		return
+	}
+}

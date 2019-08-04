@@ -13,7 +13,9 @@ import (
 	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spiffyjr/spif-fe/lich"
 	"github.com/spiffyjr/spif-fe/parser"
+	"github.com/spiffyjr/spif-fe/playnet"
 	"github.com/zserge/lorca"
 )
 
@@ -21,7 +23,7 @@ type Game struct {
 	conn    net.Conn
 	lichCmd *exec.Cmd
 	parser  *parser.Parser
-	playnet *PlayNet
+	playnet *playnet.Client
 	ui      lorca.UI
 }
 
@@ -44,7 +46,7 @@ func New() (*Game, error) {
 	}
 
 	return &Game{
-		playnet: NewPlayNet(),
+		playnet: playnet.NewClient(),
 		ui:      ui,
 	}, nil
 }
@@ -108,6 +110,10 @@ func (g *Game) LoginPlayNet(host string, port int, key string) error {
 func (g *Game) Run() error {
 	g.parser = parser.New(g.sendTag)
 
+	g.ui.Bind("lichProcesses", func() ([]lich.Process, error) {
+		return lich.Processes()
+	})
+
 	g.ui.Bind("loginLich", func(name string, port int) error {
 		return g.LoginLich(name, port)
 	})
@@ -116,7 +122,7 @@ func (g *Game) Run() error {
 		return g.LoginPlayNet(name, port, key)
 	})
 
-	g.ui.Bind("playNetCharacters", func(code string) ([]PlayNetCharacter, error) {
+	g.ui.Bind("playNetCharacters", func(code string) ([]playnet.Character, error) {
 		return g.playnet.GetCharacters(code)
 	})
 
@@ -124,11 +130,11 @@ func (g *Game) Run() error {
 		return g.playnet.Connect(username, []byte(password))
 	})
 
-	g.ui.Bind("playNetInstances", func() ([]PlayNetInstance, error) {
+	g.ui.Bind("playNetInstances", func() ([]playnet.Instance, error) {
 		return g.playnet.GetInstances()
 	})
 
-	g.ui.Bind("playNetLoginData", func(code string, characterID string) (*PlayNetLogin, error) {
+	g.ui.Bind("playNetLoginData", func(code string, characterID string) (*playnet.LoginData, error) {
 		return g.playnet.GetLoginData(code, characterID)
 	})
 

@@ -23,6 +23,8 @@ import { WindowComponent } from './window/window.component';
 import { WoundsComponent } from './wounds/wounds.component';
 import { LoginComponent } from './login/login.component';
 import { GameComponent } from './game/game.component';
+import { LoginLichComponent } from './login-lich/login-lich.component';
+import { LoginPlayComponent } from './login-play/login-play.component';
 
 @NgModule({
     declarations: [
@@ -34,6 +36,8 @@ import { GameComponent } from './game/game.component';
         WoundsComponent,
         LoginComponent,
         GameComponent,
+        LoginLichComponent,
+        LoginPlayComponent,
     ],
     imports: [
         // @angular/angular

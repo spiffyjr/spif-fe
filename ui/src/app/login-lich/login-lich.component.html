@@ -1,0 +1,20 @@
+<ng-container *ngIf="processes">
+    <h3>Running Characters</h3>
+    <button *ngFor="let ps of processes" mat-raised-button color="accent" (click)="login(ps.character, ps.port)">
+        {{ ps.character }}
+    </button>
+</ng-container>
+
+<h3>Start Lich</h3>
+
+<form [formGroup]="form" (submit)="login(form.value.character, form.value.port)">
+    <mat-form-field>
+        <input matInput type="text" placeholder="Character" formControlName="character" />
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="number" placeholder="Port" formControlName="port" />
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit" [disabled]="form.invalid">
+        Connect
+    </button>
+</form>

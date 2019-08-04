@@ -3,11 +3,14 @@ import { Tag } from './tag';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { PlayNetInstance, PlayNetCharacter, PlayNetLoginData } from './playnet';
+import { LichProcess } from './lich';
 
 declare global {
     interface Window {
         connected(): Promise<boolean>;
         disconnect(): Promise<void>;
+
+        lichProcesses(): Promise<LichProcess[]>;
 
         loginPlayNet(host: string, port: number, key: string): Promise<void>;
         loginLich(name: string, port: number): Promise<void>;
@@ -38,6 +41,10 @@ export class GameService {
 
     disconnect(): Promise<void> {
         return window.disconnect();
+    }
+
+    lichProcesses(): Promise<LichProcess[]> {
+        return window.lichProcesses();
     }
 
     loginLich(name: string, port: number): Promise<void> {

@@ -8,6 +8,10 @@
 
     <mat-card>
         <mat-tab-group>
+            <mat-tab label="Lich">
+                <app-login-lich [update$]="update$"></app-login-lich>
+            </mat-tab>
+
             <mat-tab label="Play.net">
                 <form *ngIf="!playInstances" [formGroup]="playForm" (submit)="playNetConnect()">
                     <mat-form-field>
@@ -32,20 +36,6 @@
                         <button mat-button color="primary" (click)="loginPlayNet(c.id)">{{ c.name }}</button>
                     </div>
                 </ng-container>
-            </mat-tab>
-
-            <mat-tab label="Lich">
-                <form [formGroup]="lichForm" (submit)="loginLich()">
-                    <mat-form-field>
-                        <input matInput type="text" placeholder="Character" formControlName="character" />
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput type="number" placeholder="Port" formControlName="port" />
-                    </mat-form-field>
-                    <button mat-button color="primary" type="submit" [disabled]="lichForm.invalid || working">
-                        Connect
-                    </button>
-                </form>
             </mat-tab>
         </mat-tab-group>
     </mat-card>

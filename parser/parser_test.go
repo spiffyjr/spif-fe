@@ -136,7 +136,7 @@ func (s *ParserSuite) TestBold() {
 }
 
 func (s *ParserSuite) TestChild() {
-	tags := fileTags("simple/child")
+	tags := fileTags("simple/child_node")
 
 	if !s.Len(tags, 1) {
 		return
@@ -208,15 +208,20 @@ func (s *ParserSuite) TestPlainText() {
 
 func (s *ParserSuite) TestNPC() {
 	tags := fileTags("simple/npc")
-	if !s.Len(tags, 1) {
+	if !s.Len(tags, 2) {
 		return
 	}
 
-	tag := tags[0]
+	for expected, actual := range map[string]interface{}{
+		"text": tags[0].Name,
+		`<b>A <a exist="200167454" noun="child">young human child</a></b> arrives, following you.`: tags[0].Text,
+	} {
+		s.Equal(expected, actual)
+	}
 
 	for expected, actual := range map[string]interface{}{
-		"text": tag.Name,
-		`You also see a <a exist="79410" noun="barker" class="npc">gnome barker</a>.`: tag.Text,
+		"text": tags[1].Name,
+		`You also see <b>a <a exist="79410" noun="barker">gnome barker</a></b>.`: tags[1].Text,
 	} {
 		s.Equal(expected, actual)
 	}

@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameService } from '../game.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PlayNetInstance, PlayNetCharacter } from '../playnet';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-    lichForm: FormGroup;
+export class LoginComponent implements OnDestroy, OnInit {
+    update$ = new Subject<{ error?: string; working?: boolean; login?: boolean }>();
+
     playForm: FormGroup;
     playCharacters: PlayNetCharacter[];
     playInstances: PlayNetInstance[];
@@ -19,12 +22,9 @@ export class LoginComponent implements OnInit {
     error: string;
     working = false;
 
-    constructor(fb: FormBuilder, private gameService: GameService, private router: Router) {
-        this.lichForm = fb.group({
-            character: ['', Validators.required],
-            port: [8000, Validators.required],
-        });
+    private ngUnsubscribe = new Subject<void>();
 
+    constructor(fb: FormBuilder, private gameService: GameService, private router: Router) {
         this.playForm = fb.group({
             username: ['', Validators.required],
             password: ['', Validators.required],
@@ -35,26 +35,19 @@ export class LoginComponent implements OnInit {
         if (await this.gameService.connected()) {
             this.router.navigateByUrl('/game');
         }
+        this.update$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(update => {
+            this.working = update.working;
+            this.error = update.error;
+
+            if (update.login) {
+                this.router.navigateByUrl('/game');
+            }
+        });
     }
 
-    async loginLich() {
-        if (this.lichForm.invalid) {
-            return;
-        }
-
-        this.error = '';
-        this.working = true;
-
-        const data = this.lichForm.value;
-
-        try {
-            await this.gameService.loginLich(data.character, data.port);
-            this.ngOnInit();
-        } catch (err) {
-            this.error = err;
-        }
-
-        this.working = false;
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     async playNetConnect() {

@@ -1,0 +1,16 @@
+:host {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 15px;
+
+    form {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 5px;
+
+        button {
+            min-height: 0; /* NEW */
+            min-width: 0;
+        }
+    }
+}

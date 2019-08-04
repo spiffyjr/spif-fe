@@ -3,6 +3,8 @@ package parser
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
+	"sort"
 	"strings"
 )
 
@@ -20,6 +22,10 @@ func New(ontag TagHandler) *Parser {
 		ontag: ontag,
 		tags:  Tags{},
 	}
+}
+
+func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 }
 
 func (p *Parser) Error(err error) {
@@ -40,14 +46,12 @@ func (p *Parser) StartElement(name string, attrs TagAttributes) {
 		return
 	}
 
-	tag := Tag{Name: name, Attrs: attrs}
+	// inline tags need an empty text node to attach to if the stack is empty
+	if p.isInline(name) && len(p.tags) == 0 {
+		p.tags.Push(Tag{Name: "text"})
+	}
 
-	// starting a new element with text on the stack, pop it off
-	// if !p.isInline(tag.Name) && len(p.tags) > 0 && p.tags.Peek().Name == "text" {
-	// 	p.send(p.tags.Pop())
-	// }
-
-	p.tags.Push(tag)
+	p.tags.Push(Tag{Name: name, Attrs: attrs})
 }
 
 func (p *Parser) EndElement(name string) {
@@ -97,6 +101,12 @@ func (p *Parser) Parse(line string) {
 		return
 	}
 
+	// convert pushBold/popBold to <b> tags
+	line = strings.Replace(line, "<pushBold/>", "<b>", -1)
+	line = strings.Replace(line, "<popBold/>", "</b>", -1)
+	line = strings.Replace(line, "<b><b>", "<b>", -1)
+	line = strings.Replace(line, "</b></b>", "</b>", -1)
+
 	dec := xml.NewDecoder(strings.NewReader(line))
 
 	for {
@@ -140,36 +150,40 @@ func (p *Parser) isInline(name string) bool {
 	return false
 }
 
-func (p *Parser) expandInlineChild(tag TagChild) string {
-	var attrs string
+func (p *Parser) expandInlineChild(tag Tag) string {
+	var (
+		attrs  string
+		keys   []string
+		values []string
+	)
 
 	for k, v := range tag.Attrs {
-		attrs += fmt.Sprintf(` %s="%s"`, k, v)
+		keys = append(keys, k)
+		values = append(values, v)
+	}
+
+	sort.Strings(keys)
+
+	for i := range keys {
+		attrs += fmt.Sprintf(` %s="%s"`, keys[i], values[i])
 	}
 
 	return fmt.Sprintf("<%s%s>%s</%s>", tag.Name, attrs, tag.Text, tag.Name)
 }
 
-func (p *Parser) send(tag Tag) {
-	var children TagChildren
-
-	// replace npc links
-	for i := range tag.Children {
-		if i == 0 {
-			continue
-		}
-
-		child := &tag.Children[i]
-		lastChild := tag.Children[i-1]
-		if child.Name == "a" && (lastChild.Name == "pushBold" || lastChild.Name == "b") {
-			child.Attrs["class"] = "npc"
-		}
+func (p *Parser) inlineChildren(tag *Tag) Tags {
+	if len(tag.Children) == 0 {
+		return tag.Children
 	}
 
 	// TODO: add toggle to disable link inlining
-	// inline children so the slower UI doesn't have to do it
+	var children Tags
 	var offset int
-	for _, child := range tag.Children {
+	for i := range tag.Children {
+		child := tag.Children[i]
+
+		child.Children = p.inlineChildren(&child)
+
 		if !p.isInline(child.Name) {
 			children = append(children, child)
 			continue
@@ -180,6 +194,10 @@ func (p *Parser) send(tag Tag) {
 		tag.Text = newText
 	}
 
-	tag.Children = children
+	return children
+}
+
+func (p *Parser) send(tag Tag) {
+	tag.Children = p.inlineChildren(&tag)
 	p.ontag(tag)
 }
