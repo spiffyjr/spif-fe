@@ -206,6 +206,21 @@ func (s *ParserSuite) TestPlainText() {
 	}
 }
 
+func (s *ParserSuite) TestMultiBold() {
+	tags := fileTags("simple/multi_bold")
+
+	if !s.Len(tags, 5) {
+		return
+	}
+
+	for expected, actual := range map[string]interface{}{
+		"text": tags[2].Name,
+		`<b>A <a exist="201318404" noun="puma">puma</a></b> tries to bite you!`: tags[2].Text,
+	} {
+		s.Equal(expected, actual)
+	}
+}
+
 func (s *ParserSuite) TestNPC() {
 	tags := fileTags("simple/npc")
 	if !s.Len(tags, 2) {

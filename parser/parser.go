@@ -101,11 +101,15 @@ func (p *Parser) Parse(line string) {
 		return
 	}
 
-	// convert pushBold/popBold to <b> tags
-	line = strings.Replace(line, "<pushBold/>", "<b>", -1)
-	line = strings.Replace(line, "<popBold/>", "</b>", -1)
-	line = strings.Replace(line, "<b><b>", "<b>", -1)
-	line = strings.Replace(line, "</b></b>", "</b>", -1)
+	// convert pushBold/popBold to regular b
+	line = strings.ReplaceAll(line, "<pushBold/>", "<b>")
+	line = strings.ReplaceAll(line, "<popBold/>", "</b>")
+
+	// double-bolds
+	line = strings.ReplaceAll(line, "<b><b>", "<b>")
+	line = strings.ReplaceAll(line, "<b> <b>", "<b>")
+	line = strings.ReplaceAll(line, "</b></b>", "</b>")
+	line = strings.ReplaceAll(line, "</b> </b>", "</b>")
 
 	dec := xml.NewDecoder(strings.NewReader(line))
 

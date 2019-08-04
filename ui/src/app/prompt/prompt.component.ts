@@ -113,7 +113,7 @@ export class PromptComponent implements AfterViewInit {
         }
 
         if (save) {
-            if (txt.length > 3) {
+            if (txt.length >= 3) {
                 this.history.push(txt);
             }
         } else {
