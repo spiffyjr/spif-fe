@@ -106,8 +106,6 @@ export class PromptComponent implements AfterViewInit {
             return;
         }
 
-        console.log(event.keyCode);
-
         // auto-focus prompt for A-Z, 0-9, ;, .
         if (
             [186, 190].includes(event.keyCode) ||
