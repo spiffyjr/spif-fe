@@ -99,11 +99,18 @@ export class PromptComponent implements AfterViewInit {
             case 'Enter':
                 this.handleEnter(event);
                 break;
-            default:
-                if (this.prompt.nativeElement !== document.activeElement) {
-                    this.prompt.nativeElement.focus();
-                }
-                break;
+        }
+
+        // skip modifiers
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            return;
+        }
+
+        // auto-focus prompt for A-Z and 0-9
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
+            if (this.prompt.nativeElement !== document.activeElement) {
+                this.prompt.nativeElement.focus();
+            }
         }
     }
 
