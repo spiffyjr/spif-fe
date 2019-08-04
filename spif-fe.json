@@ -1,4 +1,5 @@
 {
+    "lichPath": "",
     "highlights": [
         {
             "pattern": "^(?:You gesture|You intone a phrase of elemental power|You recite a series of mystical phrases|You trace a series of glowing runes|Your hands glow with power as you invoke|You trace a simple rune while intoning|You trace a sign while petitioning the spirits|You trace an intricate sign that contorts in the air).*$",

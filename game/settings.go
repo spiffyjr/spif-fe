@@ -2,6 +2,7 @@ package game
 
 type Settings struct {
 	Highlights []SettingsHighlight `json:"highlights"`
+	LichPath   string              `json:"lichPath"`
 	Macros     []SettingsMacro     `json:"macros"`
 }
 

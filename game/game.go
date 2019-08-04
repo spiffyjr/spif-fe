@@ -20,11 +20,12 @@ import (
 )
 
 type Game struct {
-	conn    net.Conn
-	lichCmd *exec.Cmd
-	parser  *parser.Parser
-	playnet *playnet.Client
-	ui      lorca.UI
+	conn     net.Conn
+	lichCmd  *exec.Cmd
+	parser   *parser.Parser
+	playnet  *playnet.Client
+	settings *Settings
+	ui       lorca.UI
 }
 
 func New() (*Game, error) {
@@ -45,10 +46,16 @@ func New() (*Game, error) {
 		ui.Load(fmt.Sprintf("http://%s", ln.Addr()))
 	}
 
-	return &Game{
+	g:= Game{
 		playnet: playnet.NewClient(),
 		ui:      ui,
-	}, nil
+	}
+
+	if err:= g.loadSettings(); err != nil {
+		return nil, err
+	}
+
+	return &g, nil
 }
 
 func (g *Game) LoginLich(name string, port int) error {
@@ -138,8 +145,8 @@ func (g *Game) Run() error {
 		return g.playnet.GetLoginData(code, characterID)
 	})
 
-	g.ui.Bind("settingsLoad", func() (*Settings, error) {
-		return g.settingsLoad()
+	g.ui.Bind("settingsLoad", func() *Settings {
+		return g.settings
 	})
 
 	g.ui.Bind("connected", func() bool {
@@ -179,16 +186,15 @@ func (g *Game) Disconnect() {
 	}
 }
 
-func (g *Game) settingsLoad() (*Settings, error) {
+func (g *Game) loadSettings() error {
 	f, err := os.Open("./spif-fe.json")
 	if err != nil {
-		return nil, err
+		return  err
 	}
-	var settings Settings
-	if err := json.NewDecoder(f).Decode(&settings); err != nil {
-		return nil, err
+	if err := json.NewDecoder(f).Decode(&g.settings); err != nil {
+		return  err
 	}
-	return &settings, nil
+	return nil
 }
 
 func (g *Game) connect() {
@@ -221,7 +227,7 @@ func (g *Game) startLich(char string, port int) error {
 	}
 
 	for _, path := range []string{
-		os.Getenv("LICH_PATH"),
+		g.settings.LichPath,
 		filepath.Join(home, "lich"),
 		filepath.Join(home, "documents", "lich"),
 		filepath.Join(home, "onedrive", "lich"),
