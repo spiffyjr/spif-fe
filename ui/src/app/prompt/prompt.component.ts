@@ -106,8 +106,14 @@ export class PromptComponent implements AfterViewInit {
             return;
         }
 
-        // auto-focus prompt for A-Z and 0-9
-        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
+        console.log(event.keyCode);
+
+        // auto-focus prompt for A-Z, 0-9, ;, .
+        if (
+            [186, 190].includes(event.keyCode) ||
+            (event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 65 && event.keyCode <= 90)
+        ) {
             if (this.prompt.nativeElement !== document.activeElement) {
                 this.prompt.nativeElement.focus();
             }
