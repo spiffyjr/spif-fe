@@ -1,0 +1,7 @@
+<dialogData id='encum'><progressBar id='encumlevel' value='0' text='None' top='5' left='-5' align='n' width='160' height='15'/><label id='encumblurb' value='You are not encumbered enough to notice.' top='10' left='0' align='n' width='160' height='50' justify='0' anchor_top='encumlevel'/></dialogData><component id='room objs'>  You also see<b>a <a exist="202545002" noun="orc">greater burrow orc</a></b>.</component>       
+<dialogData id='minivitals'><skin id='healthSkin' name='healthBar' controls='health' left='0%' top='0%' width='25%' height='100%'/><progressBar id='health' value='87' text='health 96/110' left='0%' customText='t' top='0%' width='25%' height='100%'/></dialogData><dialogData id='injuries'><skin id='healthSkin' name='healthBar2' controls='health2' align='n' top='160' width='140' left='0' height='15'/><progressBar id='health2' value='87' text='health 96/110' customText='t' align='n' top='160' width='140' left='0' height='15'/></dialogData><dialogData id="injuries"><image id="head" name="Injury1" height="0" width="0"/></dialogData>
+<b>A <a exist="202545002" noun="orc">greater burrow orc</a></b> swings a short sword at you!
+  AS: +128 vs DS: +97 with AvD: +30 + d100 roll: +84 = +145
+   ... and hits for 14 points of damage!
+   Glancing strike to the head!
+<prompt time="1564927053">&gt;</prompt>

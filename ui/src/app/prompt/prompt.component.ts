@@ -1,12 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    HostListener,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 
 import { GameService } from '../game.service';
 
@@ -14,7 +6,6 @@ import { GameService } from '../game.service';
     selector: 'app-prompt',
     templateUrl: './prompt.component.html',
     styleUrls: ['./prompt.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromptComponent implements AfterViewInit {
     @ViewChild('prompt', { static: true })
@@ -34,13 +25,9 @@ export class PromptComponent implements AfterViewInit {
     private interval: NodeJS.Timer;
     private serverTimeOffset = 0;
 
-    constructor(public gameService: GameService, private chRef: ChangeDetectorRef) {
-        this.chRef.detach();
-    }
+    constructor(public gameService: GameService) {}
 
     ngAfterViewInit() {
-        this.chRef.detectChanges();
-
         this.prompt.nativeElement.focus();
 
         this.gameService.ontag.subscribe(t => {
@@ -50,7 +37,6 @@ export class PromptComponent implements AfterViewInit {
                 } else {
                     this.serverTimeOffset = +new Date() / 1000 - +t.attrs.time;
                     this.promptText = t.text;
-                    this.chRef.detectChanges();
                 }
             } else if (t.name === 'roundTime' || t.name === 'castTime') {
                 const updateEveryMs = 100;
@@ -58,7 +44,6 @@ export class PromptComponent implements AfterViewInit {
                 let time = (+t.attrs.value - +new Date() / 1000 + this.serverTimeOffset) * 1000;
                 this.roundtimeCount = Math.ceil(time / 1000);
                 this.roundtimeType = t.name;
-                this.chRef.detectChanges();
 
                 if (this.interval) {
                     clearInterval(this.interval);
@@ -73,7 +58,6 @@ export class PromptComponent implements AfterViewInit {
                     const newCount = Math.ceil(time / 1000);
                     if (newCount < this.roundtimeCount) {
                         this.roundtimeCount = newCount;
-                        this.chRef.detectChanges();
                     }
                 }, updateEveryMs);
             } else if (t.name === 'clearPrompt') {
@@ -146,8 +130,12 @@ export class PromptComponent implements AfterViewInit {
 
         if (idx > -1) {
             const el: HTMLInputElement = this.prompt.nativeElement;
+            el.focus();
             el.value = this.history[idx];
             this.historyIndex = idx;
+
+            // TODO: surely a better way to do this?
+            setTimeout(() => (el.selectionStart = el.selectionEnd = el.value.length));
         }
     }
 
@@ -160,7 +148,9 @@ export class PromptComponent implements AfterViewInit {
 
         idx = this.historyIndex + 1;
         if (idx < this.history.length) {
-            this.prompt.nativeElement.value = this.history[idx];
+            const el: HTMLInputElement = this.prompt.nativeElement;
+            el.focus();
+            el.value = this.history[idx];
             this.historyIndex = idx;
         } else {
             this.prompt.nativeElement.value = '';

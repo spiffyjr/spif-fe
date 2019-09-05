@@ -18,26 +18,27 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CompassComponent } from './compass/compass.component';
 import { PromptComponent } from './prompt/prompt.component';
-import { StatusComponent } from './status/status.component';
 import { WindowComponent } from './window/window.component';
 import { WoundsComponent } from './wounds/wounds.component';
 import { LoginComponent } from './login/login.component';
 import { GameComponent } from './game/game.component';
 import { LoginLichComponent } from './login-lich/login-lich.component';
 import { LoginPlayComponent } from './login-play/login-play.component';
+import { DialogModule } from './dialog/dialog.module';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         CompassComponent,
         PromptComponent,
-        StatusComponent,
         WindowComponent,
         WoundsComponent,
         LoginComponent,
         GameComponent,
         LoginLichComponent,
         LoginPlayComponent,
+        SidebarComponent,
     ],
     imports: [
         // @angular/angular
@@ -54,6 +55,7 @@ import { LoginPlayComponent } from './login-play/login-play.component';
         MatTabsModule,
 
         AppRoutingModule,
+        DialogModule,
     ],
     bootstrap: [AppComponent],
 })

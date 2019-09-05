@@ -1,14 +1,14 @@
 :host {
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: 150px auto;
+    grid-template-columns: 200px auto;
     grid-template-rows: auto;
     height: 100vh;
     overflow: hidden;
 
     .body {
         display: grid;
-        grid-template-rows: 150px minmax(0, 1fr) 20px 30px;
+        grid-template-rows: 150px 150px minmax(0, 1fr) 20px 30px;
         grid-gap: 5px;
         min-height: 0;
 
@@ -17,12 +17,5 @@
             grid-gap: 5px;
             grid-template-columns: 1fr 1fr 1fr 1fr;
         }
-    }
-
-    .sidebar {
-        display: grid;
-        grid-template-rows: 1fr 200px 200px 20px 20px 20px;
-        grid-gap: 5px;
-        min-height: 0;
     }
 }

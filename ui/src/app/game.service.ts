@@ -27,10 +27,15 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
+    ondialogdata = new Subject<Tag>();
     ontag = new Subject<Tag>();
 
     constructor(private router: Router) {
         window.ontag = (tag: Tag) => {
+            if (tag.name === 'dialogData') {
+                console.log(JSON.stringify(tag));
+                this.ondialogdata.next(tag);
+            }
             this.ontag.next(tag);
         };
     }

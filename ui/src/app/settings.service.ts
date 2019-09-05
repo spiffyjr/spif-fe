@@ -28,8 +28,6 @@ export class SettingsService {
 
     async load(): Promise<void> {
         return window.settingsLoad().then(settings => {
-            console.log(`settings loaded: ${JSON.stringify(settings)}`);
-
             this.highlights = settings.highlights;
 
             for (const highlight of settings.highlights) {

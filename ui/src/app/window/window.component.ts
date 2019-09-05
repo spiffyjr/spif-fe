@@ -1,13 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as Mark from 'mark.js';
 
@@ -25,7 +16,6 @@ interface Output {
     selector: 'app-window',
     templateUrl: './window.component.html',
     styleUrls: ['./window.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WindowComponent implements AfterViewInit, OnInit {
     @ViewChild('container', { static: true })

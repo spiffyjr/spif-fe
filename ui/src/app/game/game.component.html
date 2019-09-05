@@ -1,20 +1,8 @@
-<div class="sidebar">
-    <div></div>
-    <app-wounds></app-wounds>
-    <app-compass></app-compass>
-    <app-status type="expr" name="mindState" color="white" background="#212121" fill="#002171"></app-status>
-    <app-status type="combat" name="pbarStance" color="white" background="#212121" fill="#002171"></app-status>
-    <app-status type="encum" name="encumlevel" color="white" background="#212121" fill="#002171"></app-status>
-</div>
+<app-sidebar></app-sidebar>
 <div class="body">
     <app-window stream="thoughts" [bufferSize]="500"></app-window>
-    <!-- <app-window></app-window> -->
+    <app-window stream="room desc" mode="single"></app-window>
     <app-window></app-window>
-    <div class="status">
-        <app-status type="minivitals" name="health" color="white" background="#212121" fill="#7f0000"></app-status>
-        <app-status type="minivitals" name="mana" color="white" background="#212121" fill="#002171"></app-status>
-        <app-status type="minivitals" name="stamina" color="black" background="#f57f17" fill="#bc5100"></app-status>
-        <app-status type="minivitals" name="spirit" color="white" background="#1b0000" fill="#3e2723"></app-status>
-    </div>
+    <div class="status"></div>
     <app-prompt></app-prompt>
 </div>

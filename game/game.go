@@ -46,12 +46,12 @@ func New() (*Game, error) {
 		ui.Load(fmt.Sprintf("http://%s", ln.Addr()))
 	}
 
-	g:= Game{
+	g := Game{
 		playnet: playnet.NewClient(),
 		ui:      ui,
 	}
 
-	if err:= g.loadSettings(); err != nil {
+	if err := g.loadSettings(); err != nil {
 		return nil, err
 	}
 
@@ -189,10 +189,10 @@ func (g *Game) Disconnect() {
 func (g *Game) loadSettings() error {
 	f, err := os.Open("./spif-fe.json")
 	if err != nil {
-		return  err
+		return err
 	}
 	if err := json.NewDecoder(f).Decode(&g.settings); err != nil {
-		return  err
+		return err
 	}
 	return nil
 }
@@ -259,6 +259,11 @@ func (g *Game) startLich(char string, port int) error {
 		if err := g.lichCmd.Run(); err != nil {
 			g.sendErrorTag(err)
 		}
+	}()
+
+	go func() {
+	time.Sleep(time.Second*5)
+	g.parser.Parse(`<dialogData id='minivitals'><skin id='healthSkin' name='healthBar' controls='health' left='0%' top='0%' width='25%' height='100%'/><progressBar id='health' value='87' text='health 96/110' left='0%' customText='t' top='0%' width='25%' height='100%'/></dialogData><dialogData id='injuries'><skin id='healthSkin' name='healthBar2' controls='health2' align='n' top='160' width='140' left='0' height='15'/><progressBar id='health2' value='87' text='health 96/110' customText='t' align='n' top='160' width='140' left='0' height='15'/></dialogData><dialogData id="injuries"><image id="head" name="Injury1" height="0" width="0"/></dialogData>`)
 	}()
 
 	return nil
