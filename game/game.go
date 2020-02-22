@@ -262,8 +262,8 @@ func (g *Game) startLich(char string, port int) error {
 	}()
 
 	go func() {
-	time.Sleep(time.Second*5)
-	g.parser.Parse(`<dialogData id='minivitals'><skin id='healthSkin' name='healthBar' controls='health' left='0%' top='0%' width='25%' height='100%'/><progressBar id='health' value='87' text='health 96/110' left='0%' customText='t' top='0%' width='25%' height='100%'/></dialogData><dialogData id='injuries'><skin id='healthSkin' name='healthBar2' controls='health2' align='n' top='160' width='140' left='0' height='15'/><progressBar id='health2' value='87' text='health 96/110' customText='t' align='n' top='160' width='140' left='0' height='15'/></dialogData><dialogData id="injuries"><image id="head" name="Injury1" height="0" width="0"/></dialogData>`)
+		time.Sleep(time.Second * 5)
+		g.parser.Parse(`<dialogData id='minivitals'><skin id='healthSkin' name='healthBar' controls='health' left='0%' top='0%' width='25%' height='100%'/><progressBar id='health' value='87' text='health 96/110' left='0%' customText='t' top='0%' width='25%' height='100%'/></dialogData><dialogData id='injuries'><skin id='healthSkin' name='healthBar2' controls='health2' align='n' top='160' width='140' left='0' height='15'/><progressBar id='health2' value='87' text='health 96/110' customText='t' align='n' top='160' width='140' left='0' height='15'/></dialogData><dialogData id="injuries"><image id="head" name="Injury1" height="0" width="0"/></dialogData>`)
 	}()
 
 	return nil
