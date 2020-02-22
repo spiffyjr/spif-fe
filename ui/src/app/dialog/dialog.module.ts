@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { LabelComponent } from './label/label.component';
 import { DataComponent } from './data/data.component';
-import { MatExpansionModule } from '@angular/material';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [DataComponent, ProgressBarComponent, LabelComponent],
